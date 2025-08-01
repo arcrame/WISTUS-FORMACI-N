@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planificador de Formaciones de Danza</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .panel h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 150px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .guides-section {
+            margin-top: 20px;
+        }
+
+        .guide-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e6ed;
+        }
+
+        .guide-item input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .guide-item.is-guide {
+            background: #ffe6e6;
+            border-color: #ff6b6b;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .formation {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .formation h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 1.4em;
+            text-align: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .dancer {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            cursor: move;
+            transition: transform 0.2s;
+            border: 3px solid white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .dancer:hover {
+            transform: scale(1.1);
+        }
+
+        .dancer.guide {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        }
+
+        .dancer.regular {
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+        }
+
+        .row-label {
+            position: absolute;
+            left: -40px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            height: 60px;
+        }
+
+        .formation-row {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .column-headers {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .column-header {
+            width: 60px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        .stats {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stats p {
+            margin: 5px 0;
+            color: #2c3e50;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #95a5a6;
+            font-style: italic;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .dancer {
+                width: 50px;
+                height: 50px;
+                font-size: 10px;
+            }
+            
+            .column-header {
+                width: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎭 Planificador de Formaciones de Danza</h1>
+            <p>Organiza tu bloque de carnaval de manera fácil y visual</p>
+        </div>
+        
+        <div class="content">
+            <div class="panel">
+                <h2>📝 Configuración del Bloque</h2>
+                
+                <div class="input-group">
+                    <label for="dancersInput">Lista de Danzantes:</label>
+                    <textarea 
+                        id="dancersInput" 
+                        placeholder="Ingresa los nombres de los danzantes, uno por línea:&#10;&#10;Juan Pérez&#10;María González&#10;Carlos López&#10;Ana Martínez&#10;..."
+                    ></textarea>
+                    <small style="color: #7f8c8d; font-style: italic;">Escribe un nombre por línea</small>
+                </div>
+
+                <div class="guides-section">
+                    <label>Selecciona los 4 Guías de Baile:</label>
+                    <div id="guidesList">
+                        <p style="color: #95a5a6; font-style: italic;">Primero ingresa la lista de danzantes</p>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="generateFormation()">
+                    ✨ Generar Formación
+                </button>
+            </div>
+
+            <div class="panel">
+                <div class="formation">
+                    <h2>🎪 Formación del Bloque</h2>
+                    <div id="formationDisplay">
+                        <div class="empty-state">
+                            <p>La formación aparecerá aquí una vez que ingreses los danzantes y generes la formación.</p>
+                            <p style="margin-top: 10px;">🎵 ¡Que comience el carnaval! 🎵</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let dancers = [];
+        let guides = [];
+
+        function updateGuidesList() {
+            const input = document.getElementById('dancersInput').value.trim();
+            const guidesList = document.getElementById('guidesList');
+            
+            if (!input) {
+                guidesList.innerHTML = '<p style="color: #95a5a6; font-style: italic;">Primero ingresa la lista de danzantes</p>';
+                return;
+            }
+
+            dancers = input.split('\n').filter(name => name.trim() !== '').map(name => name.trim());
+            
+            if (dancers.length === 0) {
+                guidesList.innerHTML = '<p style="color: #95a5a6; font-style: italic;">Primero ingresa la lista de danzantes</p>';
+                return;
+            }
+
+            guidesList.innerHTML = '';
+            
+            dancers.forEach((dancer, index) => {
+                const guideItem = document.createElement('div');
+                guideItem.className = 'guide-item';
+                guideItem.innerHTML = `
+                    <input type="checkbox" id="guide_${index}" onchange="updateGuides()">
+                    <label for="guide_${index}">${dancer}</label>
+                `;
+                guidesList.appendChild(guideItem);
+            });
+        }
+
+        function updateGuides() {
+            const checkboxes = document.querySelectorAll('#guidesList input[type="checkbox"]');
+            const checkedCount = document.querySelectorAll('#guidesList input[type="checkbox"]:checked').length;
+            
+            // Limitar a 4 guías máximo
+            checkboxes.forEach((checkbox, index) => {
+                const guideItem = checkbox.parentElement;
+                
+                if (checkbox.checked) {
+                    guideItem.classList.add('is-guide');
+                    if (checkedCount > 4 && !guides.includes(index)) {
+                        checkbox.checked = false;
+                        guideItem.classList.remove('is-guide');
+                        alert('Solo puedes seleccionar máximo 4 guías de baile.');
+                        return;
+                    }
+                } else {
+                    guideItem.classList.remove('is-guide');
+                }
+            });
+
+            // Actualizar lista de guías
+            guides = [];
+            checkboxes.forEach((checkbox, index) => {
+                if (checkbox.checked) {
+                    guides.push(index);
+                }
+            });
+        }
+
+        function generateFormation() {
+            const input = document.getElementById('dancersInput').value.trim();
+            
+            if (!input) {
+                alert('Por favor, ingresa la lista de danzantes.');
+                return;
+            }
+
+            dancers = input.split('\n').filter(name => name.trim() !== '').map(name => name.trim());
+            
+            if (dancers.length < 4) {
+                alert('Necesitas al menos 4 danzantes para formar un bloque.');
+                return;
+            }
+
+            if (guides.length !== 4) {
+                alert('Debes seleccionar exactamente 4 guías de baile.');
+                return;
+            }
+
+            // Organizar danzantes: primero los guías, luego el resto
+            const guideDancers = guides.map(index => dancers[index]);
+            const regularDancers = dancers.filter((_, index) => !guides.includes(index));
+            
+            const organizedDancers = [...guideDancers, ...regularDancers];
+            
+            displayFormation(organizedDancers);
+        }
+
+        function displayFormation(organizedDancers) {
+            const formationDisplay = document.getElementById('formationDisplay');
+            
+            // Crear encabezados de columnas
+            let html = `
+                <div class="column-headers">
+                    <div class="column-header">A</div>
+                    <div class="column-header">B</div>
+                    <div class="column-header">C</div>
+                    <div class="column-header">D</div>
+                </div>
+            `;
+
+            let currentIndex = 0;
+            let rowNumber = 1;
+
+            while (currentIndex < organizedDancers.length) {
+                const remainingDancers = organizedDancers.length - currentIndex;
+                let dancersInRow = Math.min(4, remainingDancers);
+                
+                // Si es la última fila y hay menos de 4 personas, ajustar posicionamiento
+                let positions = [];
+                if (dancersInRow === 4) {
+                    positions = [0, 1, 2, 3]; // Posiciones normales
+                } else if (dancersInRow === 3) {
+                    positions = [0.5, 1.5, 2.5]; // Centrado para 3 personas
+                } else if (dancersInRow === 2) {
+                    positions = [1, 2]; // Centrado para 2 personas
+                } else if (dancersInRow === 1) {
+                    positions = [1.5]; // Centrado para 1 persona
+                }
+
+                html += `<div class="formation-row">`;
+                html += `<div class="row-label">${rowNumber}</div>`;
+                
+                // Crear espacios vacíos para centrar
+                for (let i = 0; i < 4; i++) {
+                    if (positions.includes(i) || (dancersInRow === 4 && i < dancersInRow)) {
+                        const dancerIndex = positions.indexOf(i) !== -1 ? positions.indexOf(i) : i;
+                        const dancer = organizedDancers[currentIndex + dancerIndex];
+                        const isGuide = rowNumber === 1; // Primera fila son guías
+                        
+                        html += `
+                            <div class="dancer ${isGuide ? 'guide' : 'regular'}">
+                                ${dancer.split(' ').map(name => name.substring(0, 3)).join(' ')}
+                            </div>
+                        `;
+                    } else {
+                        html += `<div style="width: 60px;"></div>`; // Espacio vacío
+                    }
+                }
+                
+                html += `</div>`;
+                
+                currentIndex += dancersInRow;
+                rowNumber++;
+            }
+
+            // Agregar estadísticas
+            html += `
+                <div class="stats">
+                    <p><strong>Total de danzantes:</strong> ${organizedDancers.length}</p>
+                    <p><strong>Guías:</strong> ${guides.length}</p>
+                    <p><strong>Danzantes regulares:</strong> ${organizedDancers.length - 4}</p>
+                    <p><strong>Filas formadas:</strong> ${rowNumber - 1}</p>
+                </div>
+            `;
+
+            formationDisplay.innerHTML = html;
+        }
+
+        // Actualizar lista de guías cuando se modifica el textarea
+        document.getElementById('dancersInput').addEventListener('input', updateGuidesList);
+    </script>
+</body>
+</html>
