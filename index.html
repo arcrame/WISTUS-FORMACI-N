@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formaciones de Carnaval</title>
+    <title>Planificador de Formaciones de Danza</title>
     <style>
         * {
             margin: 0;
@@ -270,8 +270,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎭 Planificador de Formaciones de Danza</h1>
-            <p>Organiza tu bloque de carnaval de manera fácil y visual</p>
+            <h1>🎊Formaciones Carnavales🎊<br>💜Tinkus Wistus💛</h1>
+            <p>Aplicación para jefes de danza tinkus wistus para la planificación de bloque mixto, varones e imillas</p>
         </div>
         
         <div class="content">
@@ -301,11 +301,11 @@
 
             <div class="panel">
                 <div class="formation">
-                    <h2>🎪 Formación del Bloque</h2>
+                    <h2>💃 Formación del Bloque 🕺</h2>
                     <div id="formationDisplay">
                         <div class="empty-state">
-                            <p>La formación aparecerá aquí una vez que ingreses los danzantes y generes la formación.</p>
-                            <p style="margin-top: 10px;">🎵 ¡Que comience el carnaval! 🎵</p>
+                            <p>La formación aparecerá aquí una vez que ingreses los participantes y generes la formación.</p>
+                            <p style="margin-top: 10px;">🎵 ¡Con ñeque y pasión! 🎵</p>
                         </div>
                     </div>
                 </div>
@@ -332,6 +332,9 @@
                 guidesList.innerHTML = '<p style="color: #95a5a6; font-style: italic;">Primero ingresa la lista de danzantes</p>';
                 return;
             }
+
+            // Ordenar alfabéticamente
+            dancers.sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
 
             guidesList.innerHTML = '';
             
